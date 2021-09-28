@@ -2,6 +2,8 @@ from rest_framework import permissions
 
 from backend.utils import decode_jwt
 
+from backend.models import RepositoryTag
+
 
 class AuthenticatedUser(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -12,3 +14,13 @@ class AuthenticatedUser(permissions.BasePermission):
         except:
             return False
         return True
+
+
+class NoDuplicatedTag(permissions.BasePermission):
+    def has_permission(self, request, view):
+        try:
+            view.get_queryset().get(name=request.data.get("name", None),
+                                    repository_id=request.data.get("repository_id", None))
+            return False
+        except RepositoryTag.DoesNotExist:
+            return True

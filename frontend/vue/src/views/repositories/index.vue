@@ -23,6 +23,14 @@
     >
       <div class="spinner-border text-light" />
     </div>
+    <div
+      v-else-if="shownRepositories.length === 0"
+      class="flex-grow-1 d-flex align-items-center justify-content-center"
+    >
+      <h1 class="text-light">
+        No starred repositories found :(
+      </h1>
+    </div>
     <div v-else class="flex-grow-1 overflow-auto">
       <repository-card
         v-for="repo in shownRepositories"

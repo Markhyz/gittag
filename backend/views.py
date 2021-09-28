@@ -11,14 +11,14 @@ import github
 
 from backend.models import RepositoryTag, GitHubUser
 from backend.serializers import RepositoryTagSerializer
-from backend.permissions import AuthenticatedUser
+from backend.permissions import AuthenticatedUser, NoDuplicatedTag
 from backend.utils import encode_jwt, get_current_user
 
 
 class RepositoryTagViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.DestroyModelMixin,
                            viewsets.GenericViewSet):
     serializer_class = RepositoryTagSerializer
-    permission_classes = [AuthenticatedUser]
+    permission_classes = [AuthenticatedUser, NoDuplicatedTag]
 
     def get_queryset(self):
         return RepositoryTag.objects.filter(user_id=self.user_id)
