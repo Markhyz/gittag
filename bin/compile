@@ -12,7 +12,16 @@ cd $BUILD_DIR/frontend/vue
 echo "-----> Frontend buildpack"
 echo "       installing dependencies"
 
+export VUE_APP_GITHUB_OAUTH_CLIENT_ID=$(cat $ENV_DIR/VUE_APP_GITHUB_OAUTH_CLIENT_ID) 
+
+if [ -d "$CACHE_DIR/node_modules" ]; then
+    cp -r $CACHE_DIR/node_modules node_modules
+fi
+
 npm install
+
+rm -rf $CACHE_DIR/node_modules
+cp -r node_modules $CACHE_DIR
 
 echo "       building app"
 
