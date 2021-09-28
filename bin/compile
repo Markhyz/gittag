@@ -27,4 +27,8 @@ echo "       building app"
 
 npm run build
 
+echo "       cleaning build"
+
+rm -rf node_modules
+
 exit 0
