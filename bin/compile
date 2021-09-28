@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+# used for inline heroku buildpack
+
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+
+PROJECT_PATH=frontend/vue
+
+echo "-----> Frontend buildpack: path is $PROJECT_PATH"
+echo "       installing dependencies"
+
+npm install
+
+echo "       building app"
+
+npm run build
+
+exit 0
