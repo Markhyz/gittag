@@ -7,9 +7,9 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
-PROJECT_PATH=frontend/vue
+cd frontend/vue
 
-echo "-----> Frontend buildpack: path is $PROJECT_PATH"
+echo "-----> Frontend buildpack"
 echo "       installing dependencies"
 
 npm install
