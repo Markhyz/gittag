@@ -12,7 +12,7 @@ import github
 from backend.models import RepositoryTag, GitHubUser
 from backend.serializers import RepositoryTagSerializer
 from backend.permissions import AuthenticatedUser, NoDuplicatedTag
-from backend.utils import encode_jwt, get_current_user
+from backend.utils import encode_jwt, get_current_user, GITHUB_OAUTH_ACCESS_TOKEN_URL
 
 
 class RepositoryTagViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.DestroyModelMixin,
@@ -39,7 +39,7 @@ class GitHubAuth(APIView):
             'code': github_oauth_code}
         headers = {'Accept': 'application/json'}
         github_request_data = requests.post(
-            'https://github.com/login/oauth/access_token', data=data, headers=headers).json()
+            GITHUB_OAUTH_ACCESS_TOKEN_URL, data=data, headers=headers).json()
 
         if 'error' in github_request_data:
             return Response({'message': github_request_data['error_description']}, status=status.HTTP_400_BAD_REQUEST)

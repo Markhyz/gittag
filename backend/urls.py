@@ -9,7 +9,7 @@ router.register('tags', views.RepositoryTagViewSet,
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth', views.GitHubAuth.as_view()),
-    path('github/user', views.get_github_user),
-    path('github/user/starred', views.get_github_user_starred)
+    path('auth', views.GitHubAuth.as_view(), name='auth'),
+    path('github/user', views.get_github_user, name='github-user'),
+    path('github/user/starred', views.get_github_user_starred, name='github-starred')
 ]

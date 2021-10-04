@@ -4,6 +4,8 @@ import jwt
 
 from backend.models import GitHubUser
 
+GITHUB_OAUTH_ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token'
+
 
 def encode_jwt(data):
     return jwt.encode(data, settings.SECRET_KEY, algorithm='HS256')

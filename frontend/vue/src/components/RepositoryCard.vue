@@ -1,13 +1,21 @@
 <template>
   <b-overlay :show="loading">
-    <b-card class="mb-5">
-      <a :href="url" class="text-decoration-none" target="_blank">
+    <b-card class="gt-repository-card mb-5">
+      <a
+        :href="url"
+        class="gt-repository-card__header text-decoration-none"
+        target="_blank"
+      >
         <b-card-title>
-          {{ name }}
+          <span class="gt-repository-card__title">
+            {{ name }}
+          </span>
         </b-card-title>
       </a>
-      <slot />
-      <div class="mt-4">
+      <div class="gt-repository-card__body">
+        <slot />
+      </div>
+      <div class="gt-repository-card__footer mt-4">
         <label :for="`${name}-tags`">Tags</label>
         <b-form-tags
           :input-id="`${name}-tags`"
