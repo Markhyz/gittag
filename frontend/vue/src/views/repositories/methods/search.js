@@ -12,6 +12,7 @@ function nameDescriptionSearch(searchText) {
 
     this.shownRepositories = searchResult.map(({ item }) => item);
   } else {
+    // Resets repositories if search text is empty
     this.shownRepositories = [...this.repositories];
   }
 }
@@ -24,6 +25,7 @@ function tagSearch(searchText) {
       this.repositories.find(repo => repo.id === item.repoId)
     );
   } else {
+    // Resets repositories if search text is empty
     this.shownRepositories = [...this.repositories];
   }
 }

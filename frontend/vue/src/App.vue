@@ -8,6 +8,10 @@
 </template>
 
 <script>
+/**
+ * Main view
+ */
+
 import NavbarView from "@/views/navbar";
 
 export default {

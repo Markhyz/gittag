@@ -16,14 +16,14 @@ import dj_database_url
 
 from pathlib import Path
 
-ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
+DJANGO_ENVIRONMENT = os.environ.get('DJANGO_ENVIRONMENT', 'development')
 
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-if ENVIRONMENT == 'development':
+if DJANGO_ENVIRONMENT == 'development':
     environ.Env.read_env(os.path.join(BASE_DIR, '.env.local'))
 else:
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -155,7 +155,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
-if ENVIRONMENT == 'production':
+if DJANGO_ENVIRONMENT == 'production':
     DEBUG = False
     SECRET_KEY = env('DJANGO_SECRET_KEY')
     CSRF_COOKIE_SECURE = True

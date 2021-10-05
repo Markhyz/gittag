@@ -21,18 +21,29 @@ class RepositoryTagViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
     permission_classes = [AuthenticatedUser, NoDuplicatedTag]
 
     def get_queryset(self):
+        """
+        Filters the model to query tags from the authenticated user
+        """
         return RepositoryTag.objects.filter(user_id=self.user_id)
 
     def perform_create(self, serializer):
+        """
+        Creates tags for the authenticated user
+        """
         serializer.save(user_id=self.user_id)
 
 
 class GitHubAuth(APIView):
     def post(self, request, format=None):
+        """
+        Authenticates user by generating a Github access token, for internal use, and our own
+        access token, for external use (end user authentication)
+        """
         github_oauth_code = request.data.get('code', None)
         if github_oauth_code is None:
             return Response({'message': 'Missing \'code\' parameter'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Uses Github OAuth application credentials and requested code to retrieve Github access token
         data = {
             'client_id': settings.GITHUB_OAUTH_CLIENT_ID,
             'client_secret': settings.GITHUB_OAUTH_CLIENT_SECRET,
@@ -54,8 +65,10 @@ class GitHubAuth(APIView):
         except github.GithubException as err:
             return Response({'message': err.data.message}, status=err.status)
         else:
+            # Saves Github access token for internal use
             user = GitHubUser(user_id=user_id, oauth_token=oauth_token)
             user.save()
+            # Generates our access token for end user authentication
             access_token = encode_jwt({'user_id': user_id})
             return Response({'access_token': access_token})
 
@@ -63,6 +76,9 @@ class GitHubAuth(APIView):
 @api_view(['GET'])
 @permission_classes([AuthenticatedUser])
 def get_github_user(request):
+    """
+    Retrieves the authenticated user data from Github
+    """
     access_token = request.headers['Authorization']
     user = get_current_user(access_token)
     github_api = github.Github(user.oauth_token)
@@ -78,6 +94,9 @@ def get_github_user(request):
 @api_view(['GET'])
 @permission_classes([AuthenticatedUser])
 def get_github_user_starred(request):
+    """
+    Retrieves the authenticated user starred repositories from Github
+    """
     access_token = request.headers['Authorization']
     user = get_current_user(access_token)
     github_api = github.Github(user.oauth_token)

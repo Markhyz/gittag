@@ -35,6 +35,7 @@ async function loadTags() {
 
   tags.forEach(tag => {
     if (this.tags[tag.repository_id]) {
+      // Inserts tag if repository is starred (unstarred repositories tags are not removed from database)
       this.tags[tag.repository_id].values.push(tag);
     }
   });

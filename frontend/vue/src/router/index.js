@@ -34,6 +34,7 @@ const router = new VueRouter({
   routes
 });
 
+// For routes that need authentication, checks if the user is logged in
 router.beforeEach((to, from, next) => {
   if (to.meta.auth && !store.getters["auth/isAuthenticated"]) {
     next({ name: "Login" });

@@ -28,6 +28,10 @@
 </template>
 
 <script>
+/**
+ * Login view
+ */
+
 import GitHubMark from "@/assets/GitHub-Mark-Light-32px.png";
 
 import api from "@/api";

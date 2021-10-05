@@ -39,7 +39,7 @@
         :url="repo.url"
         :tags="getTagNames(tags[repo.id])"
         :loading="tags[repo.id].loading"
-        @tag-change="addNewTag(repo.id, $event)"
+        @tag-change="onTagChange(repo.id, $event)"
       >
         {{ repo.description }}
       </repository-card>
@@ -48,6 +48,10 @@
 </template>
 
 <script>
+/**
+ * Repositories view
+ */
+
 import Fuse from "fuse.js";
 
 import api from "@/api";
@@ -104,37 +108,41 @@ export default {
 
       this.tagFuse = new Fuse(searchableTags, { keys: ["tags"] });
     },
-    async addNewTag(repoId, currentTags) {
+    async addTag(repoId, currentTags, oldTags) {
+      const newTagName = currentTags.filter(tagName => {
+        const isOld = oldTags.find(oldTag => oldTag.name === tagName);
+
+        return !isOld;
+      })[0];
+
+      const { data } = await api.authenticatedAxios.post(api.tagPath(), {
+        repository_id: repoId,
+        name: newTagName
+      });
+
+      this.tags[repoId].values.push(data);
+      this.$set(this.tags, repoId, this.tags[repoId]);
+    },
+    async removeTag(repoId, currentTags, oldTags) {
+      const removedTag = oldTags.filter(oldTag => {
+        const tagExists = currentTags.find(tagName => oldTag.name === tagName);
+
+        return !tagExists;
+      })[0];
+
+      await api.authenticatedAxios.delete(api.tagPath(removedTag.id));
+
+      this.tags[repoId].values = oldTags.filter(
+        tag => tag.name != removedTag.name
+      );
+      this.$set(this.tags, repoId, this.tags[repoId]);
+    },
+    async onTagChange(repoId, currentTags) {
       const oldTags = this.tags[repoId].values;
       if (currentTags.length > oldTags.length) {
-        const newTagName = currentTags.filter(tagName => {
-          const isOld = oldTags.find(oldTag => oldTag.name === tagName);
-
-          return !isOld;
-        })[0];
-
-        const { data } = await api.authenticatedAxios.post(api.tagPath(), {
-          repository_id: repoId,
-          name: newTagName
-        });
-
-        this.tags[repoId].values.push(data);
-        this.$set(this.tags, repoId, this.tags[repoId]);
+        await this.addTag(repoId, currentTags, oldTags);
       } else {
-        const removedTag = oldTags.filter(oldTag => {
-          const tagExists = currentTags.find(
-            tagName => oldTag.name === tagName
-          );
-
-          return !tagExists;
-        })[0];
-
-        await api.authenticatedAxios.delete(api.tagPath(removedTag.id));
-
-        this.tags[repoId].values = oldTags.filter(
-          tag => tag.name != removedTag.name
-        );
-        this.$set(this.tags, repoId, this.tags[repoId]);
+        await this.removeTag(repoId, currentTags, oldTags);
       }
 
       this.setTagFuse();

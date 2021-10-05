@@ -13,6 +13,7 @@
         </b-card-title>
       </a>
       <div class="gt-repository-card__body">
+        <!-- @slot Repository description -->
         <slot />
       </div>
       <div class="gt-repository-card__footer mt-4">
@@ -28,12 +29,28 @@
 </template>
 
 <script>
+/**
+ * Repository card
+ */
+
 export default {
   name: "RepositoryCard",
   props: {
+    /**
+     * Display loading overlay
+     */
     loading: Boolean,
+    /**
+     * Repository name
+     */
     name: String,
+    /**
+     * Repository tags
+     */
     tags: Array,
+    /**
+     * Repository URL
+     */
     url: String
   }
 };

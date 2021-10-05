@@ -5,6 +5,7 @@ import authModule from "./modules/auth";
 
 import VuexPersistence from "vuex-persist";
 
+// Saves "auth" store in localStorage to persist browser refresh
 const vuexLocalstorage = new VuexPersistence({
   storage: window.localStorage,
   modules: ["auth"]

@@ -21,6 +21,10 @@
 </template>
 
 <script>
+/**
+ * Navbar view
+ */
+
 import { mapGetters } from "vuex";
 
 import { logout } from "@/utils";
